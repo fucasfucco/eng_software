@@ -18,6 +18,8 @@ mongoose.connect("mongodb+srv://fuca:147896325@cluster0.a2bqb.mongodb.net/blogDB
 
 const productSchema = {
     name: String,
+    productId: Number,
+    sellerName: String,
     sellerId: Number,
     weight: Number,
     height: Number,
@@ -47,7 +49,7 @@ app.get("/home", function (req, res) {
     res.render("home");
 });
 
-app.get("/createSeller", function(req,res){
+app.get("/createSeller", function (req, res) {
     res.render("createSeller");
 });
 
@@ -56,13 +58,12 @@ app.get("/sellers", function (req, res) {
         if (!err) {
             res.render("sellers", {
                 foundSellers: foundSellers,
-                 }
+            }
             );
-        }else{
+        } else {
             res.send(err);
             console.log("[ERROR] Please contact the administrator.");
         }
-
     })
 })
 
@@ -71,16 +72,14 @@ app.get("/productsT", function (req, res) {
         if (!err) {
             res.render("productsT", {
                 foundProducts: foundProducts,
-                 }
+            }
             );
-        }else{
+        } else {
             res.send(err);
             console.log("[ERROR] Please contact the administrator.");
         }
-
     })
 })
-
 
 app.get("/products", function (req, res) {
     res.render("products");
@@ -93,7 +92,6 @@ app.route("/seller")
     })
 
     .post(function (req, res) {
-
         const sellerIdCreation = Math.floor(Date.now() / 1000);
         const newSeller = new Seller({
             name: req.body.name,
@@ -133,12 +131,12 @@ app.route("/product")
     })
 
     .post(function (req, res) {
+        const productID = Math.floor(Math.random() * (72000 - 70000 + 1) + 70000);
         Seller.findOne({ sellerId: req.body.sellerId }, function (err, seller) {
             if (!err) {
-                if (ammount != null) {
+                if (seller.totalAmmount != null) {
                     var ammount = seller.totalAmmount;
                     ammount++;
-
                     Seller.findOneAndUpdate({ sellerId: req.body.sellerId }, { $set: { totalAmmount: ammount } }, function (err) {
                         if (!err) {
                             console.log("Succesfully updated!");
@@ -146,6 +144,8 @@ app.route("/product")
                             const newProduct = new Product({
                                 name: req.body.name,
                                 sellerId: req.body.sellerId,
+                                sellerName: seller.name,
+                                productId: productID,
                                 price: req.body.price,
                                 weight: req.body.weight,
                                 height: req.body.height,
@@ -168,14 +168,24 @@ app.route("/product")
                     console.log("[ERROR] Seller doesn't exist!");
                     res.render("errorSeller");
                 }
-
             } else {
                 console.log("[ERROR] Please contact the administrator.");
             }
         });
-
-
     })
+
+    .delete(function (req, res) {
+        const id = req.body.sellerId;
+        Seller.findOneAndDelete({ sellerId: id }, function (err) {
+            if (!err) {
+                res.redirect("home");
+                console.log("Successfully deleted Seller.");
+            } else {
+                console.log("[ERROR] Please contact the administrator.");
+                res.send(err);
+            }
+        });
+    });
 
 
 app.listen(3000, () => {
