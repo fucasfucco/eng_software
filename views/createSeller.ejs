@@ -1,0 +1,19 @@
+
+
+<%- include("partials/header"); -%>
+
+
+
+
+<form action="/seller" class="createSeller" method="post">
+    <label for="">Nome do seller </label><input type="text" name="name" id=""><br>
+    <label for="">Comissão </label><input type="text" name="comission" id=""><br>
+    <label for="">Método de entrega  [ex:sedex]</label><input type="text" name="shipping" id=""><br>
+    <input type="submit" value="create">
+</form>
+
+
+
+
+
+<%- include("partials/footer"); -%>

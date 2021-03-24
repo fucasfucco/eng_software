@@ -1,0 +1,20 @@
+
+<%- include("partials/header"); -%>
+
+
+    <%foundSellers.forEach(function(foundSellers){%>
+
+        
+        <div id="postContainer" class="delete">
+            SellerName -><label class="authorPostCss"><%=foundSellers.name%></label><br>
+            SellerId   -><label class="authorPostCss"><%=foundSellers.sellerId%></label><br>
+            TotalAmmount-><label class="authorPostCss"><%=foundSellers.totalAmmount%></label><br>
+            SellerComission-><label class="authorPostCss"><%=foundSellers.sellerComission%></label><br>
+            SellerShipping-><label class="authorPostCss"><%=foundSellers.shipping%></label><br>
+            <hr>
+        </div>
+
+    <% }); %>
+
+
+    <%- include("partials/footer"); -%>
