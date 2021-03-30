@@ -85,11 +85,29 @@ app.get("/products", function (req, res) {
     res.render("products");
 });
 
+//---->
+app.get("/seller/:sellerNameSended", function(req, res){
+    Seller.findOne({name: req.params.sellerNameSended}, function(err, seller){
+        if(!err){
+            console.log(seller);
+            res.send(seller);
+        }
+    })
+})
+//---->
+
 app.route("/seller")
 
     .get(function (req, res) {
-        res.redirect("/sellers");
+    Seller.find({}, function (err, foundSellers) {
+        if (!err) {
+            res.send(foundSellers);
+        } else {
+            res.send(err);
+            console.log("[ERROR] Please contact the administrator.");
+        }
     })
+})
 
     .post(function (req, res) {
         const sellerIdCreation = Math.floor(Date.now() / 1000);
@@ -103,6 +121,7 @@ app.route("/seller")
 
         newSeller.save(function (err) {
             if (!err) {
+                console.log(req.body);
                 res.send("Successfully added a new seller.");
             } else {
                 console.log("[ERROR] Please contact the administrator.");
@@ -155,6 +174,7 @@ app.route("/product")
 
                             newProduct.save(function (err) {
                                 if (!err) {
+                                    console.log("Succesfully created new Galo");
                                     res.write('<script>alert("Succesfully added new product")</script>');
                                 } else {
                                     res.send(err);
